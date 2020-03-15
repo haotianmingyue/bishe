@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class StuentTest {
     @RequestMapping("/studenttest")
     public String getTest(){
-        return "student/test.html";
+        return "student/test";
     }
     @RequestMapping("/Paper")
     public String getPaper(){

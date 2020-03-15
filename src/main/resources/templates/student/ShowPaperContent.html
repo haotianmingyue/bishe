@@ -14,15 +14,30 @@
     <link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
     <link id="themeLink" rel="stylesheet" type="text/css" href="/easyui/themes/default/easyui.css">
 
+
+
     <script>
         // when double click a cell, begin editing and make the editor get focus
         $(function () {
             $('#list').datagrid({
                 onDblClickCell: function(index,field,value){
-                    $(this).datagrid('beginEdit', index);
-                    var ed = $(this).datagrid('getEditor', {index:index,field:field});
-                    $(ed.target).focus();
-                    alert('双击');
+                    var row = $('#list').datagrid('getSelected');
+
+                    var id=row.testQuestionID;
+                    str1="$('#"+row.testQuestionID+"')";
+                    str2="#"+row.testQuestionID;
+                    // alert($('#list').length>0)
+                    // alert($('#'+row.testQuestionID).length>0);
+                    if($('#'+row.testQuestionID).length>0){
+                        alert("组件存在")
+                    }
+                    else{
+                        str=""+"题目内容"+"<li>"+row.testQuestionContent+"</li><br>"+"你的答案"+"<br><textarea style='width: 50%'id='"+row.testQuestionID+"'>"+"</textarea><br>";
+                        $("#answer").append(str);
+                    }
+                    $("#editForm22").table("submit","findExamQuestionsById?testQuestionID="+rows[0].testQuestionID);
+
+
                 }
             });
         })
@@ -31,30 +46,30 @@
 
 </head>
 <body>
+<div id="cc" class="easyui-layout" style="width:100%;height:600px;">
+    <div id="answer" data-options="region:'east',title:'答案',split:true" style="width:70%;height: 100%">
+        <button>交卷</button><br>
+    </div>
+    <div id="question" data-options="region:'west',title:'问题列表',split:true" style="width:30%;height: 100%">
+        <table id="list" class="easyui-datagrid" url="StudentExamQuestion" title="问题列表"  fit="true" border="false"
+               fitColumns="true"
+               pagination="true"
+               singleSelect="true"
+               rownumbers="true"
+               toolbar="#tb">
+            <thead>
+            <tr>
+                <th data-options="field:'testQuestionContent',width:300">题目内容</th>
+                <th data-options="field:'testQuestionScore',width:100">题目分值</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
 
-
-<table id="list" class="easyui-datagrid" url="ExamQuestion" title="用户管理"  fit="true" border="false"
-       fitColumns="true"
-       pagination="true"
-       singleSelect="true"
-       rownumbers="true"
-       toolbar="#tb">
-    <thead>
-    <tr>
-        <th data-options="field:'id',checkbox:true" >编号</th>
-        <th data-options="field:'testQuestionContent',width:500">题目内容</th>
-        <th data-options="field:'testQuestionScore',width:80">题目分值</th>
-    </tr>
-    </thead>
-</table>
-
-
-<!-- 工具条 -->
-<div id="tb">
-    <a id="addBtn1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">开始考试</a>
 </div>
+<div>
 
-<!-- 编辑窗口 -->
+</div>
 
 </body>
 </html>
