@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>后台管理</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="This is my page">
+    <!-- 导入easyui的资源文件 -->
+    <script type="text/javascript" src="/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="/easyui/themes/icon.css">
+    <link id="themeLink" rel="stylesheet" type="text/css" href="/easyui/themes/default/easyui.css">
+
+    <script>
+        // when double click a cell, begin editing and make the editor get focus
+        $(function () {
+            $('#list').datagrid({
+                onDblClickCell: function(index,field,value){
+                    $(this).datagrid('beginEdit', index);
+                    var ed = $(this).datagrid('getEditor', {index:index,field:field});
+                    $(ed.target).focus();
+                    alert('双击');
+                }
+            });
+        })
+    </script>
+
+
+</head>
+<body>
+
+
+<table id="list" class="easyui-datagrid" url="ExamQuestion" title="用户管理"  fit="true" border="false"
+       fitColumns="true"
+       pagination="true"
+       singleSelect="true"
+       rownumbers="true"
+       toolbar="#tb">
+    <thead>
+    <tr>
+        <th data-options="field:'id',checkbox:true" >编号</th>
+        <th data-options="field:'testQuestionContent',width:500">题目内容</th>
+        <th data-options="field:'testQuestionScore',width:80">题目分值</th>
+    </tr>
+    </thead>
+</table>
+
+
+<!-- 工具条 -->
+<div id="tb">
+    <a id="addBtn1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">开始考试</a>
+</div>
+
+<!-- 编辑窗口 -->
+
+</body>
+</html>

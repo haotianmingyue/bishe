@@ -40,7 +40,9 @@ public class LoginS {
                 return "teacher/teaindex";//教师登录主页
             }
             if(account.getUserRole().equals("3")){
-                return "student/teacher.html";
+                httpSession.setAttribute("account",accounts);
+                System.out.println(httpSession.getAttribute("account"));
+                return "student/stuindex.html";
             }
             else{
                 return "error.html";

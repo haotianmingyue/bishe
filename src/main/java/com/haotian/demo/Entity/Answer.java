@@ -10,6 +10,16 @@ public class Answer implements Serializable {
     private long answerID;
     @Column
     private long testEamineeAnswerID;
+    @Column private long testID;
+
+    public long getTestID() {
+        return testID;
+    }
+
+    public void setTestID(long testID) {
+        this.testID = testID;
+    }
+
     @Column private long testQuestionID;
     @Column private String testQuestionEamineeAns;
     @Column private String testQuestionEScore;
