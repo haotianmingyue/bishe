@@ -22,25 +22,46 @@
             $('#list').datagrid({
                 onDblClickCell: function(index,field,value){
                     var row = $('#list').datagrid('getSelected');
-
                     var id=row.testQuestionID;
                     str1="$('#"+row.testQuestionID+"')";
                     str2="#"+row.testQuestionID;
                     // alert($('#list').length>0)
                     // alert($('#'+row.testQuestionID).length>0);
                     if($('#'+row.testQuestionID).length>0){
-                        alert("组件存在")
+                        alert("试题存在")
                     }
                     else{
-                        str=""+"题目内容"+"<li>"+row.testQuestionContent+"</li><br>"+"你的答案"+"<br><textarea style='width: 50%'id='"+row.testQuestionID+"'>"+"</textarea><br>";
-                        $("#answer").append(str);
+                        str=""+"题目内容"+"<li>"+row.testQuestionContent+"</li><br>"+"你的答案"+"<br><textarea style='width: 50%'id='"+row.testQuestionID+"'name='"+row.testQuestionID+"'>"+"</textarea><br>";
+                        $("#answerContent").append(str);
                     }
-                    $("#editForm22").table("submit","findExamQuestionsById?testQuestionID="+rows[0].testQuestionID);
+                    // $("#editForm22").table("submit","findExamQuestionsById?testQuestionID="+rows[0].testQuestionID);
 
 
                 }
             });
         })
+    </script>
+    <script>
+        function submitText() {
+            $("#answerContent").submit();
+            alert("交卷成功");
+            //待定问题/////
+            // var tab = window.parent.$("#tt").tabs("getSelected"); //获取当前选中的tab对象
+            // var index = window.parent.$("#tt").tabs("getTabIndex", tab);  //获取当前tab的索引
+            // window.parent.$("#tt").tabs("close", index ); //关闭当前tab页
+        }
+        // $(document).ready(function(){
+        //     $("#sss").click(function(){
+        //         $("#answerContent").submit();
+        //         alert("交卷成功");
+        //         var tab = window.parent.$("#tt").tabs("getSelected"); //获取当前选中的tab对象
+        //         var index = window.parent.$("#tt").tabs("getTabIndex", tab);  //获取当前tab的索引
+        //         window.parent.$("#tt").tabs("close", index ); //关闭当前tab页
+        //     });
+        // });
+    </script>
+    <script>
+
     </script>
 
 
@@ -48,10 +69,14 @@
 <body>
 <div id="cc" class="easyui-layout" style="width:100%;height:600px;">
     <div id="answer" data-options="region:'east',title:'答案',split:true" style="width:70%;height: 100%">
-        <button>交卷</button><br>
+        <form id="answerContent" action="/studentSaveTest" method="post">
+            <!--<button type="submit" id="sss">交卷</button><br>-->
+            <button type="submit" onclick="submitText()">交卷</button><br>
+        </form>
+
     </div>
     <div id="question" data-options="region:'west',title:'问题列表',split:true" style="width:30%;height: 100%">
-        <table id="list" class="easyui-datagrid" url="StudentExamQuestion" title="问题列表"  fit="true" border="false"
+        <table id="list" class="easyui-datagrid" url="StudentExamQuestion" title="详细内容"  fit="true" border="false"
                fitColumns="true"
                pagination="true"
                singleSelect="true"

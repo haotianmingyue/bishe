@@ -12,6 +12,15 @@ public class Paper implements Serializable {
     @Column private String testPaperTotalTime;
     @Column private long testQuestionSetterID;
     @Column private String testIsApproved;
+//    @Column private String isConsult;
+
+//    public String getIsConsult() {
+//        return isConsult;
+//    }
+//
+//    public void setIsConsult(String isConsult) {
+//        this.isConsult = isConsult;
+//    }
 
     public String getTestIsApproved() {
         return testIsApproved;

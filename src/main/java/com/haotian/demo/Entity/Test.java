@@ -14,6 +14,24 @@ public class Test implements Serializable {
     @Column private String testTotalScore;
     @Column private long testRespondentID;
     @Column private String testTime;
+    @Column private String isConsult;
+    @Column private long testQuestionSetterID;
+
+    public long getTestQuestionSetterID() {
+        return testQuestionSetterID;
+    }
+
+    public void setTestQuestionSetterID(long testQuestionSetterID) {
+        this.testQuestionSetterID = testQuestionSetterID;
+    }
+
+    public String getIsConsult() {
+        return isConsult;
+    }
+
+    public void setIsConsult(String isConsult) {
+        this.isConsult = isConsult;
+    }
 
     public Long getTestID() {
         return testID;

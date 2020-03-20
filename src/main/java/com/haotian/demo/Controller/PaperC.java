@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.haotian.demo.Entity.Paper;
 import com.haotian.demo.Entity.Question;
+import com.haotian.demo.Entity.Test;
 import com.haotian.demo.MasterDatabase.Dao.AccountDao;
 import com.haotian.demo.MasterDatabase.Dao.PaperDao;
 import com.haotian.demo.MasterDatabase.Dao.QuestionDao;
 import com.haotian.demo.SecondaryDatabase.Dao.PaperDao2;
 import com.haotian.demo.SecondaryDatabase.Dao.QuestionDao2;
 //import com.haotian.demo.Test.QuestionServiceimpl;
+import com.haotian.demo.SecondaryDatabase.Dao.TestDao2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +40,8 @@ public class PaperC {
     private QuestionDao2 questionDao2;//从数据库读
     @Autowired
     private PaperDao2 paperDao2;//从数据中读考卷
+    @Autowired
+    private TestDao2 testDao2;
 
 
     private Map<String,Object> result = new HashMap<String,Object>();
@@ -59,6 +63,10 @@ public class PaperC {
         httpSession.setAttribute("TestPaperID",paper1.getTestPaperID());
 //        System.out.println("TestPaperID"+paper1.getTestPaperID());
         return "teacher/Exam";
+    }
+    @RequestMapping("/toBeMarked")
+    public String toBemarked(){
+        return "teacher/test";
     }
 
     @RequestMapping("/saveExamQuestions")
@@ -217,6 +225,13 @@ public class PaperC {
     @RequestMapping("/test")
     public  String test(){
         return "teacher/unuse.html";
+    }
+    @RequestMapping("/teacherGetTest")
+    @ResponseBody
+    public List<Test> teacherGetTest(HttpSession httpSession){
+        Long account=Long.parseLong(httpSession.getAttribute("account").toString());
+        List<Test>testList=testDao2.findAllByTestQuestionSetterIDAndIsConsult(account,"否");
+        return  testList;
     }
 
 
