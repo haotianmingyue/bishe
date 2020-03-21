@@ -72,6 +72,16 @@ public class StudentC {
         System.out.println("得到已完成考试列表");
         return testList;//返回已完成考试列表
     }
+    @RequestMapping("/studentGetTestResult")//返回已完成考试列表
+    @ResponseBody
+    public List<Test> getStudentTestResultList(HttpSession httpSession)throws JsonProcessingException {
+
+        Long account=Long.parseLong(httpSession.getAttribute("account").toString());
+        System.out.println("答题人账号"+account);
+        List<Test>testList=testDao2.findAllByTestRespondentIDAndIsConsult(account,"是");//得到以批阅考试
+        System.out.println("得到已完成考试列表");
+        return testList;//返回已完成考试列表
+    }
     @RequestMapping("/toStudentShowPaperContent")
     public String toStudentShowPaperContent(HttpServletRequest httpServletRequest,HttpSession httpSession){
 
@@ -84,6 +94,12 @@ public class StudentC {
         System.out.println("考试ID"+httpServletRequest.getParameter("testID"));
         httpSession.setAttribute("TestID",httpServletRequest.getParameter("testID"));
         return "student/ShowTestContent";
+    }
+    @RequestMapping("/toStudentShowTestResultContent")//转到历史考试详细内容页面
+    public String toStudentShowTestResultContent(HttpServletRequest httpServletRequest,HttpSession httpSession){
+        System.out.println("考试ID"+httpServletRequest.getParameter("testID"));
+        httpSession.setAttribute("TestID",httpServletRequest.getParameter("testID"));
+        return "student/ShowTestResultContent";
     }
 
     @RequestMapping("/StudentExamQuestion")  //显示当前考卷 所有的问题
@@ -105,7 +121,8 @@ public class StudentC {
             problem.setProblemAnswer(answerList.get(i).getTestQuestionEamineeAns());//得到问题答案
             long testQuestionID=answerList.get(i).getTestQuestionID();
             problem.setProblemContent(questionDao2.findById(testQuestionID).getTestQuestionContent());//得到问题内容
-            System.out.println("问题内容"+problem.getProblemContent()+"问题答案"+problem.getProblemAnswer());
+            problem.setScore(answerList.get(i).getTestQuestionEScore());//得到 学生得分
+            System.out.println("问题内容"+problem.getProblemContent()+"问题答案"+problem.getProblemAnswer()+"问题得分"+problem.getScore());
             problemList.add(problem);//加入到队列中
         }
         return problemList;
@@ -149,5 +166,9 @@ public class StudentC {
         }
         System.out.println("得到考卷");
         return "success.html";
+    }
+    @RequestMapping("/toStudentTestResult")
+    public String studentTestResult(){
+        return "student/ShowTestResult";
     }
 }

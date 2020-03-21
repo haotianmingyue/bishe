@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>待批改考试列表</title>
+    <title>已完成考试列表</title>
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
@@ -18,9 +18,9 @@
             $("#list").datagrid({
                 //双击事件
                 onDblClickRow: function (index, row) {
+                    // alert("考试id"+row.testID)
                     var row = $('#list').datagrid('getSelected');
-                    testAddSubPage(row.testID+"号试卷详细内容","toTeacherShowTestContent");
-
+                    testAddSubPage(row.testID+"号考试详细内容","toStudentShowTestResultContent");
                 }
             });
         })
@@ -28,16 +28,12 @@
 
     <script>//在符集tabs上创建uige标签页
     function testAddSubPage(title,url){
-
         var jq = top.jQuery;
-
         if (jq("#tt").tabs('exists', title)){
             jq("#tt").tabs('select', title);
         } else {
             var row = $('#list').datagrid('getSelected');
-            var url1=url+'?testID='+row.testID; //url拼接
-            //alert(url1);
-            // var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%;height:100%;"></iframe>';
+            var url1=url+'?testID='+row.testID; //url拼接;
             var content = '<iframe scrolling="auto" frameborder="0"  src="'+url1+'" style="width:100%;height:100%;"></iframe>';
             jq("#tt").tabs('add',{
                 title:title,
@@ -46,36 +42,21 @@
             });
         }}
     </script>
-
-
 </head>
 <body>
 
-<table id="list" class="easyui-datagrid" url="teacherGetTest" title="待批改考试列表"  fit="true" border="false"
+<table id="list" class="easyui-datagrid" url="studentGetTestResult" title="已完成考试列表"  fit="true" border="false"
        fitColumns="true" pagination="true"  singleSelect="true"  rownumbers="true"  toolbar="#tb">
-
     <thead>
     <tr>
-        <th data-options="field:'testID',width:70"  >考试编号</th>
-        <th data-options="field:'testPaperID',width:70"  >考卷编号</th>
-        <th data-options="field:'testRespondentID',width:200" >答题人账号</th>
-        <th data-options="field:'isConsult',width:70" >是否批改</th>
-        <th data-options="field:'testTime',width:200">答题时间</th>
+        <th data-options="field:'testID',width:50"  >考试id</th>
+        <th data-options="field:'testPaperID',width:200" >考卷编号</th>
+        <th data-options="field:'testQuestionSetterID',width:200" >出题人账号</th>
+        <!--<th data-options="field:'isConsult',width:200" >是否批阅</th>-->
+        <th data-options="field:'testTotalScore',width:200" >考试得分</th>
+        <th data-options="field:'testTime',width:200">考试完成时间</th>
     </tr>
     </thead>
 </table>
-
-
-<!-- 编辑窗口 -->
-<div id="win" class="easyui-window" title="数据编辑" style="width:300px;height:300px"
-     data-options="iconCls:'icon-save',modal:true,closed:true">
-    <form id="editForm" method="post">
-        <br/>
-        &nbsp;&nbsp;课程名称:&nbsp;&nbsp;&nbsp;<input type="text" name="lessonname" class="easyui-validatebox" data-options="required:true"/><br/><br/>
-
-        <br/><br/>
-        &nbsp;&nbsp;<a id="saveBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
-    </form>
-</div>
 </body>
 </html>

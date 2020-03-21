@@ -3,6 +3,15 @@ package com.haotian.demo.Convenient;
 public class Problem {
     private String problemContent;
     private String problemAnswer;
+    private String score;
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public String getProblemContent() {
         return problemContent;

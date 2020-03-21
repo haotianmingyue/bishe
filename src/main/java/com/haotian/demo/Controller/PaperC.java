@@ -2,12 +2,13 @@ package com.haotian.demo.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.haotian.demo.Convenient.QuestionAndAnswer;
+import com.haotian.demo.Entity.Answer;
 import com.haotian.demo.Entity.Paper;
 import com.haotian.demo.Entity.Question;
 import com.haotian.demo.Entity.Test;
-import com.haotian.demo.MasterDatabase.Dao.AccountDao;
-import com.haotian.demo.MasterDatabase.Dao.PaperDao;
-import com.haotian.demo.MasterDatabase.Dao.QuestionDao;
+import com.haotian.demo.MasterDatabase.Dao.*;
+import com.haotian.demo.SecondaryDatabase.Dao.AnswerDao2;
 import com.haotian.demo.SecondaryDatabase.Dao.PaperDao2;
 import com.haotian.demo.SecondaryDatabase.Dao.QuestionDao2;
 //import com.haotian.demo.Test.QuestionServiceimpl;
@@ -42,6 +43,12 @@ public class PaperC {
     private PaperDao2 paperDao2;//从数据中读考卷
     @Autowired
     private TestDao2 testDao2;
+    @Autowired
+    private TestDao testDao;
+    @Autowired
+    private AnswerDao2 answerDao2;
+    @Autowired
+    private AnswerDao answerDao;
 
 
     private Map<String,Object> result = new HashMap<String,Object>();
@@ -222,6 +229,12 @@ public class PaperC {
         httpSession.setAttribute("TestPaperID",httpServletRequest.getParameter("testPaperID"));
         return "admin/ShowPaperContent";
     }
+    @RequestMapping("/toTeacherShowTestContent")//转到教师查看学生回答页面
+    public String toTeacherShowTestContent(HttpSession httpSession,HttpServletRequest httpServletRequest){
+        System.out.println("考试id"+httpServletRequest.getParameter("testID"));
+        httpSession.setAttribute("TestID",httpServletRequest.getParameter("testID"));
+        return "teacher/ShowTest";
+    }
     @RequestMapping("/test")
     public  String test(){
         return "teacher/unuse.html";
@@ -232,6 +245,46 @@ public class PaperC {
         Long account=Long.parseLong(httpSession.getAttribute("account").toString());
         List<Test>testList=testDao2.findAllByTestQuestionSetterIDAndIsConsult(account,"否");
         return  testList;
+    }
+    @RequestMapping("/teacherGetTestContent")
+    @ResponseBody
+    public List<QuestionAndAnswer> teacherGetTestContent(HttpSession httpSession){
+        Long testID=Long.parseLong(httpSession.getAttribute("TestID").toString());
+        System.out.println("考试idid"+testID);
+        List<QuestionAndAnswer> questionAndAnswerList=new ArrayList<QuestionAndAnswer>();
+        List<Answer> answerList=answerDao2.findAllByTestID(testID);
+        for(int i=0;i<answerList.size();i++){
+            QuestionAndAnswer questionAndAnswer=new QuestionAndAnswer();
+            questionAndAnswer.setStudentAnswer(answerList.get(i).getTestQuestionEamineeAns());//得到答案
+            questionAndAnswer.setQuestion(questionDao2.findById(answerList.get(i).getTestQuestionID()).getTestQuestionContent());//得到问题内容
+            questionAndAnswer.setCorrect(questionDao2.findById(answerList.get(i).getTestQuestionID()).getTestQuestionTrueAns());//得到正确答案
+            questionAndAnswer.setScore(questionDao2.findById(answerList.get(i).getTestQuestionID()).getTestQuestionScore());//得到题目分值
+            questionAndAnswer.setQuestionID(questionDao2.findById(answerList.get(i).getTestQuestionID()).getTestQuestionID());//得到题目id
+            questionAndAnswer.setAnswerID(answerList.get(i).getAnswerID());//答案编号
+            questionAndAnswerList.add(questionAndAnswer);//添加到列表中
+        }
+        System.out.println("数据传输完毕");
+        return questionAndAnswerList;
+    }
+    @RequestMapping("/teacherSaveTest")
+    public String teacherSaveTest(HttpSession httpSession,HttpServletRequest httpServletRequest){
+        long total=0;
+        long testID=Long.parseLong(httpSession.getAttribute("TestID").toString());//得到考试编号
+        List<Answer> answerList=answerDao2.findAllByTestID(testID);//得到这个考试的所有答案
+        for(int i=0;i<answerList.size();i++){
+            String score=httpServletRequest.getParameter(Long.toString(answerList.get(i).getAnswerID()));
+            System.out.println("分数"+score);
+            Answer answer=answerList.get(i);
+            answer.setTestQuestionEScore(score);//设定得分
+            answerDao.save(answer);//保存数据库
+            total=total+Long.parseLong(score);//得分相加
+        }
+        Test test=testDao2.findByTestID(testID);
+        test.setIsConsult("是");//设定已阅
+        System.out.println("总分"+total);
+        test.setTestTotalScore(Long.toString(total));
+        testDao.save(test);//更新数据库
+        return "success";
     }
 
 
