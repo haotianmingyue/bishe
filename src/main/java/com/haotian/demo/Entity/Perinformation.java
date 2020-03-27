@@ -17,6 +17,16 @@ public class Perinformation implements Serializable {
     private String userBirth;
     @Column
     private String userEmail;
+    @Column
+    private String userGender;
+
+    public String getUserGender() {
+        return userGender;
+    }
+
+    public void setUserGender(String userGender) {
+        this.userGender = userGender;
+    }
 
     public long getUserID() {
         return userID;

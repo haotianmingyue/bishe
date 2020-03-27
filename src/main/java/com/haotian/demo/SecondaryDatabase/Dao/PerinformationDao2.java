@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PerinformationDao2 extends JpaRepository<Perinformation,Long> {
-
+Perinformation findByUserID(long userID);
 }
